@@ -2,7 +2,7 @@
     Title: Programa que simula una partida de Dados con la clase Dado
     Author: Villarroel Gutierrez Josue Luberth 
     Date: 24/03/2025
-    Version: 1.0 
+    Version: 1.1
 '''
 
 
@@ -54,13 +54,14 @@ def jugar():
     
     # Creamos un dado de 6 caras
     dado = Dado()   
+    msj = ""
     print("\n-------------------  INICIO DEL JUEGO  -------------------\n")
 
     # Iniciamos el bucle que da inicio al juego
     while dado.get_caras() != 2:
 
         # Mostramos el numero actual de caras del dado
-        print("\n*** Tu dado tiene [" + str(dado.get_caras()) + "] caras ***\n")
+        print("\n*** " + msj + "Tu dado tiene [" + str(dado.get_caras()) + "] caras ***\n")
 
         # Lanzamos el dado hasta que no salga el número máximo de caras
         lanzar_dado(dado)
@@ -92,6 +93,8 @@ def jugar():
                 dado.set_caras(2)   
             else:
                 dado.set_caras(result_ini)
+            
+            msj = "Bien hecho, Ahora " 
         else:
 
             # Duplicamos el número de caras del dado si falla
@@ -104,11 +107,11 @@ def jugar():
             if opcion == 1:
                 break
 
-    
-    # Mostramos el resultado final
-    print("Bien jugado, conseguiste que el dado tuviera 2 caras. ¡Ganaste!")
-    print("-------------------  FIN DEL JUEGO  -------------------")
+            msj = "Como fallaste, Ahora "
 
+    # Mostramos el resultado final
+    print("Bien jugado, conseguiste que el dado tuviera 2 caras. ¡Ganaste!\n")
+    print("-------------------  FIN DEL JUEGO  -------------------\n")
 
 
 if __name__ == "__main__":
