@@ -2,7 +2,7 @@
     Title: Programa que simula una partida de Dados con la clase Dado
     Author: Villarroel Gutierrez Josue Luberth 
     Date: 24/03/2025
-    Version: 1.1
+    Version: 1.2
 '''
 
 
