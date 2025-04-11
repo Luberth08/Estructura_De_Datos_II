@@ -58,10 +58,13 @@ def main():
     # Imprimimos el número de nodos del árbol
     print("\nNúmero de nodos del árbol:" + str(arbol.cantidad()))
 
-    # Eliminamos valores del árbol
-    arbol.eliminar(49)  
-    arbol.eliminar(87) 
-    arbol.eliminar(50) 
+    # Imprimimos el arbol en dfs
+    print("\nRecorrido en dfs del árbol:")
+    print(arbol.dfs())
+
+    # Imprimimos el arbol en bfs
+    print("\nRecorrido en bfs del árbol:")
+    print(arbol.bfs())
 
     # Dibujamos el arbol en consola
     print("\nDibujo del árbol: \n")

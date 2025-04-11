@@ -7,6 +7,7 @@
 
 # Importamos la clase Node desde el archivo Nodo.py
 from Nodo import Node
+from collections import deque
 
 
 # Definimos la clase ArbolBinario
@@ -401,5 +402,74 @@ class BinaryTree:
             self.__dibujar_recursivo(nodo_actual.get_izquierda(), nivel + 1)
         else:
             print("     " * nivel)
-    
 
+    # Metodo para el recorrido dfs optimizado con visitados
+    def dfs(self):
+        '''
+            Realiza un recorrido en profundidad (DFS) del árbol binario optimizado con nodos visitados.
+
+            Returns:
+                list: Lista de valores en orden DFS.
+        '''
+        return self.__dfs_recursivo(self.__raiz, set())
+
+    # Método privado para el recorrido dfs de forma recursiva
+    def __dfs_recursivo(self, nodo_actual: Node, visitados: set):
+        '''
+            Método privado que realiza un recorrido en profundidad (DFS) del árbol binario de forma recursiva.
+
+            Parameters:
+                nodo_actual (Node): Nodo actual en la iteración.
+                visitados (set): Conjunto de nodos visitados.
+            Returns:
+                list: Lista de valores en orden DFS.
+        '''
+        # Verificamos si el nodo actual no es None y no ha sido visitado
+        if nodo_actual is not None and nodo_actual not in visitados:
+            visitados.add(nodo_actual)
+            return [nodo_actual.get_valor()] + self.__dfs_recursivo(nodo_actual.get_izquierda(), visitados) + self.__dfs_recursivo(nodo_actual.get_derecha(), visitados)
+        else:
+            return []
+
+    # Método para el recorrido bfs del arbol binario
+    def bfs(self):
+        '''
+            Realiza un recorrido en anchura (BFS) del árbol binario.
+
+            Returns:
+                list: Lista de valores en orden BFS.
+        '''
+        return self.__bfs_recursivo(self.__raiz)
+    
+    # Método privado para el recorrido bfs del arbol binario de forma recursiva
+    def __bfs_recursivo(self, nodo_actual: Node, cola=None, visitados=None):
+        '''
+            Método privado que realiza un recorrido en anchura (BFS) del árbol binario de forma recursiva.
+
+            Parameters:
+                nodo_actual (Node): Nodo actual en la iteración.
+                cola (deque): Cola de nodos por visitar.
+                visitados (list): Lista de nodos visitados.
+            Returns:
+                list: Lista de valores en orden BFS.
+        '''
+        # Inicializamos la cola y la lista de visitados si son None
+        if cola is None:
+            cola = deque([nodo_actual])
+            visitados = []
+
+        # Verificamos si la cola está vacía
+        if not cola:
+            return visitados
+
+        # Desencolamos el nodo actual
+        nodo = cola.popleft()
+        
+        # Verificamos si el nodo actual no es None
+        if nodo is not None:
+            visitados.append(nodo.get_valor())
+            cola.append(nodo.get_izquierda())
+            cola.append(nodo.get_derecha())
+
+        return self.__bfs_recursivo(None, cola, visitados)
+    
