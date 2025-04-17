@@ -2,7 +2,7 @@
     Title: Una clase que implementa los atributos y metodos de un Arbol Binario
     Author: Villarroel Gutierrez Josue Luberth 
     Date: 01/04/2025
-    Version: 1.0 
+    Version: 1.1
 '''
 
 # Importamos la clase Node desde el archivo Nodo.py
@@ -34,11 +34,6 @@ class BinaryTree:
     def set_raiz(self, raiz: Node):
         '''Establece el nodo raiz del arbol'''
         self.__raiz = raiz
-
-    # Metodo para representar el arbol en string
-    def __str__(self):
-        '''Devuelve una representación en string del árbol binario'''
-        return "Arbol Binario con raiz: " + str(self.__raiz)
 
     # Método para insertar un nuevo nodo en el árbol binario
     def insertar_nodo(self, valor: int):
@@ -72,6 +67,7 @@ class BinaryTree:
             # Si no, seguimos buscando en el subárbol izquierdo
             if nodo_actual.get_izquierda() is None:
                 nodo_actual.set_izquierda(nuevo_nodo)
+                nuevo_nodo.set_padre(nodo_actual)
             else:
                 self.__insertar_recursivo(nodo_actual.get_izquierda(), nuevo_nodo)
         else:
@@ -79,6 +75,7 @@ class BinaryTree:
             # Si no, seguimos buscando en el subárbol derecho
             if nodo_actual.get_derecha() is None:
                 nodo_actual.set_derecha(nuevo_nodo)
+                nuevo_nodo.set_padre(nodo_actual)
             else:
                 self.__insertar_recursivo(nodo_actual.get_derecha(), nuevo_nodo)
     
@@ -91,40 +88,8 @@ class BinaryTree:
                 bool: True si el árbol está vacío, False en caso contrario.
         '''
         return self.__raiz is None
-
-    # Método para verificar si un valor es una hoja del árbol
-    def es_hoja(self, valor: int):
-        '''
-            Verifica si un valor es una hoja del árbol binario.
-
-            Parameters:
-                valor (int): Valor a verificar.
-            Returns:
-                bool: True si el valor es una hoja, False en caso contrario.
-        '''
-        return self.__es_hoja_recursivo(self.__raiz, valor)
     
-    # Método privado para verificar si un valor es una hoja de forma recursiva
-    def __es_hoja_recursivo(self, nodo_actual: Node, valor: int):
-        '''
-            Método privado que verifica si un valor es una hoja del árbol binario de forma recursiva.
-
-            Parameters:
-                nodo_actual (Node): Nodo actual en la iteración.
-                valor (int): Valor a verificar.
-            Returns:
-                bool: True si el valor es una hoja, False en caso contrario.
-        '''
-        # Verificamos si el nodo actual es None
-        if nodo_actual is None:
-            return False
-        # Verificamos si el nodo actual es una hoja y su valor coincide con el buscado
-        if nodo_actual.get_valor() == valor and nodo_actual.get_izquierda() is None and nodo_actual.get_derecha() is None:
-            return True
-        # Buscamos en el subárbol izquierdo y derecho
-        return self.__es_hoja_recursivo(nodo_actual.get_izquierda(), valor) or self.__es_hoja_recursivo(nodo_actual.get_derecha(), valor)
-    
-    # Método para buscar un nodo en el árbol binario
+    # Metodo para buscar un nodo en el arbol binario
     def buscar_x(self, valor: int):
         '''
             Busca un nodo en el árbol binario.
@@ -132,12 +97,12 @@ class BinaryTree:
             Parameters:
                 valor (int): Valor del nodo a buscar.  
             Returns:
-                bool: True si el nodo existe, False en caso contrario.
+                Node: Nodo encontrado o None si no existe.
         '''
-        return self.__buscar_x_recursivo(self.__raiz, valor)
+        return self.__buscar_recursivo(self.__raiz, valor)
     
     # Método privado para buscar un nodo de forma recursiva
-    def __buscar_x_recursivo(self, nodo_actual: Node, valor: int):
+    def __buscar_recursivo(self, nodo_actual: Node, valor: int):
         '''
             Método privado que busca un nodo en el árbol binario de forma recursiva.
 
@@ -145,19 +110,19 @@ class BinaryTree:
                 nodo_actual (Node): Nodo actual en la iteración.
                 valor (int): Valor del nodo a buscar.
             Returns:
-                bool: True si el nodo existe, False en caso contrario.  
+                Node: Nodo encontrado o None si no existe.  
         '''
         # Verificamos si el nodo actual es None
         if nodo_actual is None:
-            return False
+            return None
         # Comparamos el valor del nodo actual con el valor buscado
         if nodo_actual.get_valor() == valor:
-            return True
+            return nodo_actual
         elif valor < nodo_actual.get_valor():
-            return self.__buscar_x_recursivo(nodo_actual.get_izquierda(), valor)
+            return self.__buscar_recursivo(nodo_actual.get_izquierda(), valor)
         else:
-            return self.__buscar_x_recursivo(nodo_actual.get_derecha(), valor)
-        
+            return self.__buscar_recursivo(nodo_actual.get_derecha(), valor)
+
     # Metodo para realizar un recorrido inorden del árbol binario, este recorrido devuelve los nodos en orden ascendente 
     def inorden(self):  
         '''
@@ -234,62 +199,83 @@ class BinaryTree:
             return []   
     
     # Método para eliminar un nodo del árbol binario
-    def eliminar(self, valor: int):
+    def eliminar_nodo(self, valor: int):
         '''
-            Elimina un nodo del árbol binario.
+            Elimina un nodo del árbol binario de forma iterativa.
 
             Parameters:
                 valor (int): Valor del nodo a eliminar.
         '''
-        self.__raiz = self.__eliminar_recursivo(self.__raiz, valor)
+        
+        # Buscamos el nodo a eliminar
+        nodo_actual = self.buscar_x(valor)
 
-    # Método privado para eliminar un nodo de forma recursiva
-    def __eliminar_recursivo(self, nodo_actual: Node, valor: int):
+        # Si el nodo no existe, salimos del método
+        if nodo_actual is None:
+            return
+        
+        # Caso 1: Nodo sin hijos (hoja)
+        if nodo_actual.es_hoja():
+            if nodo_actual.get_padre() is not None:
+                if nodo_actual.get_padre().get_izquierda() == nodo_actual:
+                    nodo_actual.get_padre().set_izquierda(None)
+                else:
+                    nodo_actual.get_padre().set_derecha(None)
+            else:
+                self.__raiz = None
+            return
+        
+        # Caso 2: Nodo con un hijo
+        if nodo_actual.numero_hijos() == 1:
+            if nodo_actual.get_izquierda() is not None:
+                hijo = nodo_actual.get_izquierda()
+            else:
+                hijo = nodo_actual.get_derecha()
+
+            if nodo_actual.get_padre() is not None:
+                if nodo_actual.get_padre().get_izquierda() == nodo_actual:
+                    nodo_actual.get_padre().set_izquierda(hijo)
+                else:
+                    nodo_actual.get_padre().set_derecha(hijo)
+            else:
+                self.__raiz = hijo
+
+            hijo.set_padre(nodo_actual.get_padre())
+            return
+        
+        # Caso 3: Nodo con dos hijos
+        sucesor : Node = self.__buscar_sucesor(nodo_actual.get_derecha())
+        valor_sucesor = sucesor.get_valor()
+        self.eliminar_nodo(valor_sucesor)
+        nodo_actual.set_valor(valor_sucesor)
+
+    # Metodo privado para buscar el sucesor inorden del subarbol derecho
+    def __buscar_sucesor(self, nodo_actual: Node):
         '''
-            Método privado que elimina un nodo en el árbol binario de forma recursiva.
+            Método privado que busca el sucesor inorden de un nodo.
 
             Parameters:
                 nodo_actual (Node): Nodo actual en la iteración.
-                valor (int): Valor del nodo a eliminar.
             Returns:
-                Node: Nodo actualizado después de la eliminación.
+                Node: Sucesor inorden.
         '''
-        # Verificamos si el nodo actual es None
-        if nodo_actual is None:
+        # Buscamos el nodo más a la izquierda en el subárbol derecho
+        if nodo_actual.get_izquierda() is not None:
+            return self.__buscar_sucesor(nodo_actual.get_izquierda())
+        else:
             return nodo_actual
 
-        # Comparamos el valor del nodo actual con el valor a eliminar
-        if valor < nodo_actual.get_valor():
-            nodo_actual.set_izquierda(self.__eliminar_recursivo(nodo_actual.get_izquierda(), valor))
-        elif valor > nodo_actual.get_valor():
-            nodo_actual.set_derecha(self.__eliminar_recursivo(nodo_actual.get_derecha(), valor))
-        else:
-            # Nodo encontrado, eliminamos el nodo
-            if nodo_actual.get_izquierda() is None:
-                return nodo_actual.get_derecha()
-            elif nodo_actual.get_derecha() is None:
-                return nodo_actual.get_izquierda()
-
-            # Nodo con dos hijos, encontramos el sucesor inorden (mínimo en el subárbol derecho)
-            temp = self.__minimo(nodo_actual.get_derecha())
-            nodo_actual.set_valor(temp.get_valor())
-            nodo_actual.set_derecha(self.__eliminar_recursivo(nodo_actual.get_derecha(), temp.get_valor()))
-
-        return nodo_actual  
-
-    # Método privado para encontrar el nodo con el valor mínimo en un subárbol
-    def __minimo(self, nodo_actual: Node):
+    # Metodo para verificar si un nodo existe en el arbol binario
+    def existe(self, valor: int):
         '''
-            Método privado que encuentra el nodo con el valor mínimo en un subárbol.
+            Verifica si un nodo existe en el árbol binario.
 
             Parameters:
-                nodo_actual (Node): Nodo actual en la iteración.
+                valor (int): Valor del nodo a verificar.
             Returns:
-                Node: Nodo con el valor mínimo.
+                bool: True si el nodo existe, False en caso contrario.
         '''
-        while nodo_actual.get_izquierda() is not None:
-            nodo_actual = nodo_actual.get_izquierda()
-        return nodo_actual
+        return self.__buscar_recursivo(self.__raiz, valor) is not None
 
     # Metodo que devuelve la cantidad de nodos en el arbol
     def cantidad(self):
@@ -374,7 +360,75 @@ class BinaryTree:
         else:
             # Contamos las hojas del subárbol izquierdo y derecho
             return self.__hojas_recursivo(nodo_actual.get_izquierda()) + self.__hojas_recursivo(nodo_actual.get_derecha())
-   
+
+    # Metodo para el recorrido dfs del arbol binario
+    def dfs(self):
+        '''
+            Realiza un recorrido en profundidad (DFS) del árbol binario.
+
+            Returns:
+                list: Lista de valores en orden DFS.
+        '''
+        return self.__dfs_recursivo(self.__raiz)
+
+    # Método privado para el recorrido dfs de forma recursiva
+    def __dfs_recursivo(self, nodo_actual: Node):
+        '''
+            Método privado que realiza un recorrido en profundidad (DFS) del árbol binario de forma recursiva.
+
+            Parameters:
+                nodo_actual (Node): Nodo actual en la iteración.
+            Returns:
+                list: Lista de valores en orden DFS.
+        '''
+        # Verificamos si el nodo actual no es None y no ha sido visitado
+        if nodo_actual is not None:
+            return [nodo_actual.get_valor()] + self.__dfs_recursivo(nodo_actual.get_izquierda()) + self.__dfs_recursivo(nodo_actual.get_derecha())
+        else:
+            return []
+
+    # Método para el recorrido bfs del arbol binario
+    def bfs(self):
+        '''
+            Realiza un recorrido en anchura (BFS) del árbol binario.
+
+            Returns:
+                list: Lista de valores en orden BFS.
+        '''
+        return self.__bfs_recursivo(self.__raiz)
+    
+    # Método privado para el recorrido bfs del arbol binario de forma recursiva
+    def __bfs_recursivo(self, nodo_actual: Node, cola=None, visitados=None):
+        '''
+            Método privado que realiza un recorrido en anchura (BFS) del árbol binario de forma recursiva.
+
+            Parameters:
+                nodo_actual (Node): Nodo actual en la iteración.
+                cola (deque): Cola de nodos por visitar.
+                visitados (list): Lista de nodos visitados.
+            Returns:
+                list: Lista de valores en orden BFS.
+        '''
+        # Inicializamos la cola y la lista de visitados en la primera llamada
+        if cola is None:
+            cola = deque([nodo_actual])
+            visitados = []
+
+        # Verificamos si la cola está vacía
+        if not cola:
+            return visitados
+
+        # Desencolamos el nodo actual
+        nodo = cola.popleft()
+        
+        # Verificamos si el nodo actual no es None
+        if nodo is not None:
+            visitados.append(nodo.get_valor())
+            cola.append(nodo.get_izquierda())
+            cola.append(nodo.get_derecha())
+
+        return self.__bfs_recursivo(None, cola, visitados)
+    
     # Metodo que dibuja el arbol binario en la consola
     def dibujar(self):
         '''
@@ -402,74 +456,3 @@ class BinaryTree:
             self.__dibujar_recursivo(nodo_actual.get_izquierda(), nivel + 1)
         else:
             print("     " * nivel)
-
-    # Metodo para el recorrido dfs optimizado con visitados
-    def dfs(self):
-        '''
-            Realiza un recorrido en profundidad (DFS) del árbol binario optimizado con nodos visitados.
-
-            Returns:
-                list: Lista de valores en orden DFS.
-        '''
-        return self.__dfs_recursivo(self.__raiz, set())
-
-    # Método privado para el recorrido dfs de forma recursiva
-    def __dfs_recursivo(self, nodo_actual: Node, visitados: set):
-        '''
-            Método privado que realiza un recorrido en profundidad (DFS) del árbol binario de forma recursiva.
-
-            Parameters:
-                nodo_actual (Node): Nodo actual en la iteración.
-                visitados (set): Conjunto de nodos visitados.
-            Returns:
-                list: Lista de valores en orden DFS.
-        '''
-        # Verificamos si el nodo actual no es None y no ha sido visitado
-        if nodo_actual is not None and nodo_actual not in visitados:
-            visitados.add(nodo_actual)
-            return [nodo_actual.get_valor()] + self.__dfs_recursivo(nodo_actual.get_izquierda(), visitados) + self.__dfs_recursivo(nodo_actual.get_derecha(), visitados)
-        else:
-            return []
-
-    # Método para el recorrido bfs del arbol binario
-    def bfs(self):
-        '''
-            Realiza un recorrido en anchura (BFS) del árbol binario.
-
-            Returns:
-                list: Lista de valores en orden BFS.
-        '''
-        return self.__bfs_recursivo(self.__raiz)
-    
-    # Método privado para el recorrido bfs del arbol binario de forma recursiva
-    def __bfs_recursivo(self, nodo_actual: Node, cola=None, visitados=None):
-        '''
-            Método privado que realiza un recorrido en anchura (BFS) del árbol binario de forma recursiva.
-
-            Parameters:
-                nodo_actual (Node): Nodo actual en la iteración.
-                cola (deque): Cola de nodos por visitar.
-                visitados (list): Lista de nodos visitados.
-            Returns:
-                list: Lista de valores en orden BFS.
-        '''
-        # Inicializamos la cola y la lista de visitados si son None
-        if cola is None:
-            cola = deque([nodo_actual])
-            visitados = []
-
-        # Verificamos si la cola está vacía
-        if not cola:
-            return visitados
-
-        # Desencolamos el nodo actual
-        nodo = cola.popleft()
-        
-        # Verificamos si el nodo actual no es None
-        if nodo is not None:
-            visitados.append(nodo.get_valor())
-            cola.append(nodo.get_izquierda())
-            cola.append(nodo.get_derecha())
-
-        return self.__bfs_recursivo(None, cola, visitados)
-    

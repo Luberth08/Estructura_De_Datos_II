@@ -24,16 +24,15 @@ def main():
     arbol = BinaryTree()
     
     # Insertamos nodos en el árbol
-    arbol.insertar_nodo(50)
-    arbol.insertar_nodo(48)
-    arbol.insertar_nodo(36)
-    arbol.insertar_nodo(25)
-    arbol.insertar_nodo(37)
-    arbol.insertar_nodo(49)
-    arbol.insertar_nodo(67)
-    arbol.insertar_nodo(65)
-    arbol.insertar_nodo(87)
-    arbol.insertar_nodo(90)
+    arbol.insertar_nodo(7)
+    arbol.insertar_nodo(5)
+    arbol.insertar_nodo(2)
+    arbol.insertar_nodo(3)
+    arbol.insertar_nodo(6)
+    arbol.insertar_nodo(9)
+    arbol.insertar_nodo(8)
+    arbol.insertar_nodo(12)
+    arbol.insertar_nodo(10)
 
     # Imprimimos el árbol en inorden
     print("Árbol en inorden:")
@@ -68,6 +67,13 @@ def main():
 
     # Dibujamos el arbol en consola
     print("\nDibujo del árbol: \n")
+    arbol.dibujar()
+
+    # Eliminamos un nodo con dos hijos
+    arbol.eliminar_nodo(5)
+
+    # Dibujamos el arbol en consola después de eliminar el nodo
+    print("\nDibujo del árbol después de eliminar el nodo 9: \n")
     arbol.dibujar()
 
 
