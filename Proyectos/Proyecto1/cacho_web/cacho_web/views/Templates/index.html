@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type='text/css' rel="stylesheet" href='{% static "css/index.css"%}'>
+    <title>Inicio</title>
+</head>
+<body>
+    <!-- boton para iniciar la partida -->
+    <div class="boton-contenedor">
+        <form action="/pre_game/" method="POST">{% csrf_token %}
+            <button type="submit"><span></span></button>
+        </form>
+    </div>
+</body>
+</html>

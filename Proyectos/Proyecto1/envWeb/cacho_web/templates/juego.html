@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cacho Web</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body>
+    <div class="contenedor">
+        <h1>🎲 Cacho vs IA</h1>
+        
+        <div class="dados-container">
+            {% for dado in session['dados'] %}
+            <div class="dado">{{ dado }}</div>
+            {% endfor %}
+        </div>
+        
+        <button onclick="simularTurnoIA()">Turno de la IA</button>
+        
+        <div class="resultados">
+            <p id="jugada-ia"></p>
+            <p id="lanzada-ia"></p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/juego.js') }}"></script>
+</body>
+</html>

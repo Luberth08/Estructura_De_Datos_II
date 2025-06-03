@@ -1,0 +1,127 @@
+{% load static %}
+{% load json_filters %} 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type='text/css' rel="stylesheet" href='{% static "css/game.css"%}'>
+    <title>Game Start</title>
+
+    <!-- TURNO INICIAL -->
+    <div id="turno_ini" class="hidden_data"
+        data-value="{{ turno }}">
+    </div>
+
+    <!-- DADOS INICIALES -->
+    <div id="dados_ini" class="hidden_data"
+        data-value='{{ dados|tojson|safe }}'>
+    </div>
+
+    <!-- DATOS DE LOS JUGADORES INICIALES -->
+    <div id="jugadores_ini" class="hidden_data"
+        data-value='{{ jugadores|tojson|safe }}'>
+    </div>
+</head>
+<body>
+    <!-- CABECERA -->
+    <header>
+        <!-- BOTON DE SALIDA -->
+        <form action="/salir/" method="POST">{% csrf_token %}
+            <button type="submit">SALIR</button>
+        </form>
+    </header>
+
+    <!-- DISEÑO DEL ENEMIGO IA -->
+    <div id="ia_container">
+        <div id="ia_avatar">
+            <img src='../static/img/perro_definitivo3.png' alt="Avatar IA">
+        </div>
+    </div>
+
+    <!-- MESA -->
+    <main id="mesa">
+
+        <!-- PUNTAJE DE LA IA -->
+        <div id="ia_points_container">
+            <p>Puntaje IA: <span id="ia_points">00000</span></p>
+        </div>
+
+        <!-- JUGADA-->
+        <p>Ultima jugada: <span id="ult_jugada">Nada</span></p>
+
+        <!-- DADOS -->
+        <table>
+            <tr>
+                <td>
+                    <button class="dice select_dice" data-dice="1" id="dice1">
+                        <img src="" class="dado-imagen" alt="Dado 1">
+                    </button>
+                </td>
+                <td>
+                    <button class="dice select_dice" data-dice="2" id="dice2">
+                        <img src="" class="dado-imagen" alt="Dado 2">
+                    </button>                    
+                </td>
+                <td>
+                    <button class="dice select_dice" data-dice="3" id="dice3">
+                        <img src="" class="dado-imagen" alt="Dado 3">
+                    </button>                
+                </td>
+                <td>
+                    <button class="dice select_dice" data-dice="4" id="dice4">
+                        <img src="" class="dado-imagen" alt="Dado 4">
+                    </button>                    
+                </td>
+                <td>
+                    <button class="dice select_dice" data-dice="5" id="dice5">
+                        <img src="" class="dado-imagen" alt="Dado 5">
+                    </button>                    
+                </td>
+            </tr>
+        </table>
+
+        <!-- LIBRETA DE JUGADAS -->
+        <div id="libreta">
+            <button class="jugada" data-value="1" disabled>PAR</button>
+            <button class="jugada" data-value="2" disabled>TRICA</button>
+            <button class="jugada" data-value="3" disabled>ESCALERA</button>
+            <button class="jugada" data-value="4" disabled>FULL</button>
+            <button class="jugada" data-value="5" disabled>POKER</button>
+            <button class="jugada" data-value="6" disabled>GRANDE</button>
+        </div>
+
+        <!-- PUNTAJE DEL JUGADOR -->
+        <p>Tu puntaje: <span id="user_points">00000</span></p>
+
+        <!-- BOTONES DE ACCION -->
+        <table>
+            <tr>
+                <td>
+                    <button id="user_lanzar"></button>
+                </td>
+            </tr>
+        </table>        
+        </div>
+    </main>
+
+    <!-- Carga jQuery + archivo JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/game.js' %}"></script>
+    
+    <!-- Pasa la URL y CSRF token a JavaScript -->
+    <script>
+        const LANZAR_DADOS_URL = "{% url 'lanzar_dados' %}";
+        const CSRF_TOKEN = "{{ csrf_token }}";
+        const RUTAS_DADOS = [
+            "{% static 'img/dado1.png' %}",
+            "{% static 'img/dado2.png' %}",
+            "{% static 'img/dado3.png' %}",
+            "{% static 'img/dado4.png' %}",
+            "{% static 'img/dado5.png' %}",
+            "{% static 'img/dado6.png' %}"
+        ];
+    </script>
+</body>
+</html>

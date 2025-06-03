@@ -5,6 +5,7 @@
     Version: 1.1
 '''
 
+
 # Importamos la clase Node desde el archivo Nodo.py
 from Nodo import Node
 from collections import deque
