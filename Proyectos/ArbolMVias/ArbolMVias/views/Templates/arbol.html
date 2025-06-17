@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-primary">
+            <i class="fas fa-project-diagram me-2"></i>Estructura del Árbol M-Vías
+        </h1>
+        <a href="{% url 'index' %}" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left me-2"></i>Volver al inicio
+        </a>
+    </div>
+    
+    <div class="alert alert-info d-flex align-items-center">
+        <i class="fas fa-info-circle fa-2x me-3"></i>
+        <div>
+            <h5 class="mb-1">Información técnica del árbol</h5>
+            <p class="mb-0">
+                Orden: {{ orden_arbol }} | 
+                Niveles: {{ arbol_estructura|length }} | 
+                Nodos: {{ total_nodos }}
+            </p>
+        </div>
+    </div>
+    
+    <div class="tree-container">
+        {% for nivel in arbol_estructura %}
+        <div class="tree-level">
+            <div class="level-header bg-primary text-white p-2 rounded-top">
+                <h5 class="mb-0">Nivel {{ forloop.counter0 }}</h5>
+            </div>
+            
+            <div class="d-flex flex-wrap">
+                {% for nodo in nivel %}
+                <div class="tree-node card m-2">
+                    <div class="card-header {% if nodo.es_hoja %}bg-success{% else %}bg-info{% endif %} text-white">
+                        <div class="d-flex justify-content-between">
+                            <span>
+                                <i class="fas fa-{% if nodo.es_hoja %}leaf{% else %}sitemap{% endif %} me-1"></i>
+                                {{ nodo.es_hoja|yesno:"Hoja,Nodo Interno" }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <span class="fw-bold">Claves:</span>
+                            <div class="d-flex flex-wrap mt-1">
+                                {% for clave in nodo.claves %}
+                                <span class="badge bg-primary me-1 mb-1">{{ clave }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="small text-muted">
+                            <div>
+                                <i class="fas fa-level-up-alt fa-rotate-90 me-1"></i>
+                                    Padre: 
+                                    {% if nodo.padre == "Raíz" %}
+                                        {{ nodo.padre }}
+                                    {% else %}
+                                        [{{ nodo.padre|join:", " }}]
+                                    {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

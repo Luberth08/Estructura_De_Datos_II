@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="fas fa-search me-2"></i>Buscar Registro</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="text-center mb-4">
+                        <i class="fas fa-search fa-3x text-primary mb-3"></i>
+                        <p class="text-muted">Ingresa el ID del registro que deseas encontrar</p>
+                    </div>
+                    
+                    <div class="input-group mb-4">
+                        <span class="input-group-text bg-primary text-white">
+                            <i class="fas fa-id-card"></i>
+                        </span>
+                        <input type="number" name="id_reg" class="form-control form-control-lg" 
+                               placeholder="ID del registro" required>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-search me-2"></i>Buscar Registro
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
