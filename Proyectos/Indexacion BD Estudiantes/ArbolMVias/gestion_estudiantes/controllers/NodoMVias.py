@@ -77,6 +77,8 @@ class NodoMVias:
             Returns:
                 int: -1 si clave1 < clave2, 0 si son iguales, 1 si clave1 > clave2.
         '''
+        clave1 = int(clave1)
+        clave2 = int(clave2)
         if clave1 < clave2:
             return -1
         elif clave1 > clave2:

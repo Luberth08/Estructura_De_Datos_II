@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h3 class="text-center"><i class="bi bi-person-dash me-2"></i>Eliminar Estudiante</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="input-group mb-4">
+                        <input type="text" class="form-control form-control-lg" 
+                               placeholder="Ingrese CI del estudiante a eliminar" 
+                               name="ci" required>
+                        <button class="btn btn-danger btn-lg" type="submit">
+                            <i class="bi bi-trash me-2"></i>Eliminar
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <strong>Precaución:</strong> Esta acción eliminará permanentemente al estudiante del sistema.
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'index' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Volver al inicio
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

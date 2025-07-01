@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="text-center">Sistema de Gestión de Estudiantes</h3>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <i class="bi bi-journal-bookmark display-1 text-primary"></i>
+                    <h2 class="mt-3">Bienvenido al Sistema</h2>
+                    <p class="lead">Gestione estudiantes con un índice de árbol M-Vías para búsquedas eficientes</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-diagram-3 display-3 text-info mb-3"></i>
+                                <h5>Estructura del Índice</h5>
+                                <p>Visualice el árbol M-Vías en tiempo real</p>
+                                <a href="{% url 'arbol' %}" class="btn btn-outline-info mt-2">Ver Árbol</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-graph-up display-3 text-success mb-3"></i>
+                                <h5>Datos</h5>
+                                <p>Total de estudiantes: {{ total_estudiantes }}</p>
+                                <p>Total indexados: {{ total_indexados }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <a href="{% url 'insertar' %}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-person-plus me-2"></i>Insertar Nuevo Estudiante
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

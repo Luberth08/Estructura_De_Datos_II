@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0"><i class="bi bi-diagram-3 me-2"></i>Estructura del Árbol de Índice</h3>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-4">
+                    <div class="p-2 bg-light rounded">
+                        <strong>Estudiantes en DB:</strong> {{ total_estudiantes }}
+                    </div>
+                    <div class="p-2 bg-light rounded">
+                        <strong>CIs indexados:</strong> {{ total_indexados }}
+                    </div>
+                    <div class="p-2 bg-light rounded">
+                        <strong>Orden del árbol:</strong> {{ orden_arbol }}
+                    </div>
+                </div>
+                
+                <div class="tree-container-wrapper" style="overflow-x: auto;">
+                    <div class="tree-container" id="tree-container" style="min-width: max-content; padding: 20px;">
+                        {% for nivel in estructura %}
+                        <div class="tree-level">
+                            {% for nodo in nivel %}
+                            <div class="tree-node">
+                                <div class="text-center">
+                                    <div class="fw-bold">Nivel {{ nodo.nivel }}</div>
+                                    <div class="mb-1">Claves: {{ nodo.claves|join:", " }}</div>
+
+                                    {% if not nodo.es_hoja %}
+                                    <div class="mt-1">Hijos: {{ nodo.num_hijos }}</div>
+                                    {% else %}
+                                    <div class="mt-1 text-success">
+                                        <i class="bi bi-leaf"></i> Nodo hoja
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        {% if not forloop.last %}
+                        <div class="tree-connector"></div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'index' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Volver al inicio
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('tree-container');
+    const zoomInBtn = document.getElementById('zoom-in');
+    const zoomOutBtn = document.getElementById('zoom-out');
+    const zoomLevel = document.getElementById('zoom-level');
+    
+    let scale = 1.0;
+    
+    // Función para aplicar zoom
+    function applyZoom() {
+        container.style.transform = `scale(${scale})`;
+        container.style.transformOrigin = 'top left';
+        zoomLevel.textContent = `${Math.round(scale * 100)}%`;
+        
+        // Ajustar el contenedor después del zoom
+        setTimeout(() => {
+            const scaledWidth = container.scrollWidth * scale;
+            container.parentElement.scrollLeft = (scaledWidth - container.parentElement.clientWidth) / 2;
+        }, 10);
+    }
+    
+    // Zoom in
+    zoomInBtn.addEventListener('click', function() {
+        if (scale < 2.0) {
+            scale += 0.1;
+            applyZoom();
+        }
+    });
+    
+    // Zoom out
+    zoomOutBtn.addEventListener('click', function() {
+        if (scale > 0.5) {
+            scale -= 0.1;
+            applyZoom();
+        }
+    });
+    
+    // Ajuste inicial para asegurar visibilidad
+    window.addEventListener('load', function() {
+        setTimeout(() => {
+            container.parentElement.scrollLeft = container.scrollWidth / 4;
+        }, 100);
+    });
+    
+    // Inicializar zoom
+    applyZoom();
+});
+</script>
+{% endblock %}

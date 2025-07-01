@@ -7,7 +7,7 @@
 
 
 from collections import deque
-from NodoMVias import NodoMVias
+from .NodoMVias import NodoMVias
 
 
 class ArbolMVias:
